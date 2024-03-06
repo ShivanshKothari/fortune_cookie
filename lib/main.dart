@@ -127,6 +127,8 @@ class _MyHomePageState extends State<MyHomePage> {
             //       ),
             //   ),
             // ),
+            Image.asset('assets/images/fortune_cookie.png',
+                width: 200, height: 200, fit: BoxFit.cover),
             Card(
               child: Column(
                 children: <Widget>[
