@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:fortune_cookie/providers/fortune_model.dart';
 import 'dart:math';
 
+import 'package:provider/provider.dart';
+
 void main() {
-  runApp(const MyApp());
+  runApp(ChangeNotifierProvider(
+      create: (context) => FortuneModel(), child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -54,79 +58,18 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String _currentFortune = "Press the button";
-  final _fortuneList = [
-    "You will not win right now",
-    "You may not win right now",
-    "You might win the next time",
-    "You may not be so worried",
-    "You will win this time! 😎"
-  ];
-
-  void _randomFortune() {
-    var random = Random();
-    setState(() {
-      _currentFortune = _fortuneList[random.nextInt(_fortuneList.length)];
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+    final fortune = Provider.of<FortuneModel>(context);
     return Scaffold(
       appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
         backgroundColor: Theme.of(context).colorScheme.primary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
         title: const Text("Fortune Cookie App"),
       ),
       body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            // Card(
-            //   child:
-            //       Padding(
-            //         padding: const EdgeInsets.all(8.0),
-            //         child: Column(
-            //           children: <Widget>[
-            //             Text(
-            //               'Your fortune for the day is:-',
-            //               style: Theme.of(context).textTheme.headlineMedium,
-            //             ),
-            //             Text(
-            //               _currentFortune,
-            //               style: TextStyle(
-            //                   fontSize: 24, fontWeight: FontWeight.w600),
-            //             ),
-            //           ],
-            //         ),
-            //       ),
-            //   ),
-            // ),
             Image.asset('assets/images/fortune_cookie.png',
                 width: 200, height: 200, fit: BoxFit.cover),
             Card(
@@ -139,7 +82,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         Text("Your fortune for the day is:-",
                             style: Theme.of(context).textTheme.headlineMedium),
                         Text(
-                          _currentFortune,
+                          fortune.currentFortune,
                           style: const TextStyle(
                               fontSize: 24, fontWeight: FontWeight.w600),
                         ),
@@ -150,7 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             ElevatedButton(
-                onPressed: _randomFortune,
+                onPressed: () => fortune.fortuneUpdate(),
                 child: const Text(
                   'Get Fortune',
                   style: TextStyle(fontWeight: FontWeight.w600),
@@ -158,11 +101,6 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: _randomFortune,
-      //   tooltip: 'Fortune',
-      //   child: const Icon(Icons.star),
-      // ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
